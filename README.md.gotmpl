@@ -1,0 +1,34 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Usage
+
+Consumed from git by tag (no Helm repository). Argo CD source:
+
+```yaml
+repoURL: https://github.com/Gilk260/helm-homepage
+path: .
+targetRevision: v{{ template "chart.version" . }}
+```
+
+Dashboard content is declared as maps under `config.services`, `config.bookmarks` and
+`config.widgets` and grouped by their `group` field. Maps (not lists) let per-cluster values
+files override a single entry, for example only the `href` of one service.
+
+An init container copies the rendered config into a writable `emptyDir` (Homepage needs a
+writable `/app/config`), and a config hash annotation restarts the pod on changes.
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE).
