@@ -1,0 +1,47 @@
+suite: homepage
+values:
+  - ../ci/default-values.yaml
+tests:
+  - it: renders no IngressRoute without a domain
+    template: templates/ingressroute.yaml
+    set:
+      domain: ""
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: routes the domain to the homepage Service on 3000
+    template: templates/ingressroute.yaml
+    asserts:
+      - equal:
+          path: spec.routes[0].match
+          value: Host(`homepage.example.com`)
+      - equal:
+          path: spec.routes[0].services[0].port
+          value: 3000
+
+  - it: groups bookmarks by their group field
+    template: templates/configmap.yaml
+    asserts:
+      - matchRegex:
+          path: data["bookmarks.yaml"]
+          pattern: '- Developer:'
+      - matchRegex:
+          path: data["bookmarks.yaml"]
+          pattern: 'href: https://github.com/'
+
+  - it: groups services by their group field
+    template: templates/configmap.yaml
+    asserts:
+      - matchRegex:
+          path: data["services.yaml"]
+          pattern: '- Infra:'
+
+  - it: uses the configured image
+    template: templates/deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers
+          content:
+            image: ghcr.io/gethomepage/homepage:v1.11.0
+          any: true
