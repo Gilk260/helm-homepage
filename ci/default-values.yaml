@@ -1,0 +1,22 @@
+domain: homepage.example.com
+config:
+  settings:
+    title: CI
+  bookmarks:
+    github:
+      name: Github
+      abbr: GH
+      href: https://github.com/
+      group: Developer
+  services:
+    grafana:
+      name: Grafana
+      description: Monitoring
+      icon: grafana
+      href: https://grafana.example.com
+      group: Infra
+  widgets:
+    kubernetes:
+      type: kubernetes
+      cluster:
+        show: true

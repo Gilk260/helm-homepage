@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "homepage.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "homepage.labels" . | nindent 4 }}
+data:
+  kubernetes.yaml: |
+    {{- toYaml .Values.config.kubernetes | nindent 4 }}
+  settings.yaml: |
+    {{- if .Values.config.settings }}
+    {{- toYaml .Values.config.settings | nindent 4 }}
+    {{- end }}
+  bookmarks.yaml: |
+    {{- $groups := dict }}
+    {{- range $key, $bm := .Values.config.bookmarks }}
+    {{- $group := $bm.group | default "Default" }}
+    {{- if not (hasKey $groups $group) }}
+    {{- $_ := set $groups $group list }}
+    {{- end }}
+    {{- end }}
+    {{- range $group, $_ := $groups }}
+    - {{ $group }}:
+      {{- range $key, $bm := $.Values.config.bookmarks }}
+      {{- if eq ($bm.group | default "Default") $group }}
+      - {{ $bm.name | default $key }}:
+        - abbr: {{ $bm.abbr | default "" }}
+          href: {{ $bm.href }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+  services.yaml: |
+    {{- $groups := dict }}
+    {{- range $key, $svc := .Values.config.services }}
+    {{- $group := $svc.group | default "Default" }}
+    {{- if not (hasKey $groups $group) }}
+    {{- $_ := set $groups $group list }}
+    {{- end }}
+    {{- end }}
+    {{- range $group, $_ := $groups }}
+    - {{ $group }}:
+      {{- range $key, $svc := $.Values.config.services }}
+      {{- if eq ($svc.group | default "Default") $group }}
+      - {{ $svc.name | default $key }}:
+          href: {{ $svc.href | default "" }}
+          description: {{ $svc.description | default "" }}
+          {{- if $svc.icon }}
+          icon: {{ $svc.icon }}
+          {{- end }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+  widgets.yaml: |
+    {{- range $key, $widget := .Values.config.widgets }}
+    - {{ $widget.type | default $key }}:
+        {{- $cfg := omit $widget "type" }}
+        {{- toYaml $cfg | nindent 8 }}
+    {{- end }}
+  custom.css: ""
+  custom.js: ""
+  docker.yaml: ""
+  proxmox.yaml: ""

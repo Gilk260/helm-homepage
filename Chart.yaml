@@ -1,0 +1,16 @@
+apiVersion: v2
+name: homepage
+description: gethomepage.dev dashboard with Kubernetes service discovery and a Traefik IngressRoute
+type: application
+version: 0.1.0
+appVersion: "1.11.0"
+
+home: https://github.com/Gilk260/helm-homepage
+
+maintainers:
+  - name: Gilk
+    email: Gilk260@gmail.com
+
+keywords:
+  - homepage
+  - dashboard

@@ -1,0 +1,57 @@
+image:
+  # -- Homepage image repository.
+  repository: ghcr.io/gethomepage/homepage
+  # -- Homepage image tag.
+  tag: v1.11.0
+
+# -- Homepage container resources.
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# -- Resources of the copy-config init container.
+initResources:
+  requests:
+    cpu: 10m
+    memory: 16Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
+
+serviceAccount:
+  # -- Create the ServiceAccount used for Kubernetes discovery.
+  create: true
+  # -- ServiceAccount name (defaults to the release fullname).
+  name: ""
+  # -- ServiceAccount annotations.
+  annotations: {}
+  # -- Mount the ServiceAccount token.
+  automount: true
+
+service:
+  # -- Service annotations.
+  annotations: {}
+
+secret:
+  # -- Extra annotations on the ServiceAccount token Secret.
+  annotations: {}
+
+# -- Hostname for the Traefik IngressRoute. No IngressRoute is rendered when empty.
+domain: ""
+
+config:
+  # -- kubernetes.yaml content.
+  kubernetes:
+    mode: cluster
+  # -- settings.yaml content.
+  settings: {}
+  # -- Bookmarks as a map; each entry has name, abbr, href and group.
+  bookmarks: {}
+  # -- Services as a map; each entry has name, description, icon, href and group.
+  services: {}
+  # -- Widgets as a map of widget name to widget config.
+  widgets: {}
